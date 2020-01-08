@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "2.0.0",
+  "description": "Application developed in ReactJS and NodeJS for learning.",
+  "main": "src/loader.js",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "keywords": [],
+  "author": "Claudiomildo Ventura",
+  "license": "ISC",
+  "devDependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.7.0",
+    "node-restful": "^0.2.5",
+    "nodemon": "^1.11.0"
+  }
+}
