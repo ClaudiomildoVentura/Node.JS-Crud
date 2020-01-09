@@ -15,8 +15,19 @@ const initialState = {
 }
 
 export default class UserCrud extends Component {
+    constructor(props) {
+        super(props)
+        this.state = { ...initialState }
 
-    state = { ...initialState }
+        this.clear = this.clear.bind(this)
+        this.save = this.save.bind(this)
+        this.getUpdatedList = this.getUpdatedList.bind(this)
+        this.updateField = this.updateField.bind(this)
+        this.load = this.load.bind(this)
+        this.remove = this.remove.bind(this)
+
+    }
+
 
     componentWillMount() {
         axios(baseUrl).then(resp => {
@@ -58,38 +69,25 @@ export default class UserCrud extends Component {
                     <div className="col-12 col-md-6">
                         <div className="form-group">
                             <label className="font-weight-bold text-uppercase">Nome</label>
-                            <input type="text" className="form-control"
-                                name="name"
-                                value={this.state.user.nome}
-                                onChange={e => this.updateField(e)}
-                                placeholder="Digite o nome..." />
+                            <input type="text" className="form-control" name="nome" placeholder="Digite o nome..."
+                                value={this.state.user.nome} onChange={e => this.updateField(e)} />
+                            {console.log(this.state.user.nome)}
                         </div>
                     </div>
 
                     <div className="col-12 col-md-6">
                         <div className="form-group">
                             <label className="font-weight-bold text-uppercase">E-mail</label>
-                            <input type="text" className="form-control"
-                                name="email"
-                                value={this.state.user.email}
-                                onChange={e => this.updateField(e)}
-                                placeholder="Digite o e-mail..." />
+                            <input type="text" className="form-control" name="email" placeholder="Digite o e-mail..."
+                                value={this.state.user.email} onChange={e => this.updateField(e)} />
                         </div>
                     </div>
                 </div>
 
-                <hr />
                 <div className="row">
                     <div className="col-12 d-flex justify-content-end">
-                        <button className="btn btn-primary  btn-sm"
-                            onClick={e => this.save(e)}>
-                            Salvar
-                        </button>
-
-                        <button className="btn btn-dark ml-1 btn-sm"
-                            onClick={e => this.clear(e)}>
-                            Cancelar
-                        </button>
+                        <button className="btn btn-primary btn-sm" onClick={e => this.save(e)}>Salvar</button>
+                        <button className="btn btn-dark ml-1 btn-sm" onClick={e => this.clear(e)}>Cancelar</button>
                     </div>
                 </div>
             </div>
@@ -101,10 +99,11 @@ export default class UserCrud extends Component {
     }
 
     remove(user) {
-        axios.delete(`${baseUrl}/${user._id}`).then(resp => {
-            const list = this.getUpdatedList(user, false)
-            this.setState({ list })
-        })
+        axios.delete(`${baseUrl}/${user._id}`)
+            .then(resp => {
+                const list = this.getUpdatedList(user, false)
+                this.setState({ list })
+            })
     }
 
     renderTable() {
@@ -133,14 +132,8 @@ export default class UserCrud extends Component {
                     <td>{user.nome}</td>
                     <td>{user.email}</td>
                     <td>
-                        <button className="btn btn-warning btn-sm"
-                            onClick={() => this.load(user)}>
-                            <i className="fa fa-pencil"></i>
-                        </button>
-                        <button className="btn btn-danger btn-sm ml-1"
-                            onClick={() => this.remove(user)}>
-                            <i className="fa fa-trash"></i>
-                        </button>
+                        <button className="btn btn-warning btn-sm" onClick={() => this.load(user)}><i className="fa fa-pencil"></i></button>
+                        <button className="btn btn-danger btn-sm ml-1" onClick={() => this.remove(user)}><i className="fa fa-trash"></i></button>
                     </td>
                 </tr>
             )
