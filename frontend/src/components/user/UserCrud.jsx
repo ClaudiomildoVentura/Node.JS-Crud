@@ -9,25 +9,19 @@ const headerProps = {
 
 const baseUrl = 'http://127.0.0.1:3001/api/users'
 
-const initialState = {
-    user: { nome: '', email: '' },
-    list: []
-}
-
 export default class UserCrud extends Component {
     constructor(props) {
         super(props)
-        this.state = { ...initialState }
+        this.state = { nome: '', email: '', list: [] }
 
-        this.clear = this.clear.bind(this)
+        this.handleChangeNome = this.handleChangeNome.bind(this)
+        this.handleChangeEmail = this.handleChangeEmail.bind(this)
         this.save = this.save.bind(this)
-        this.getUpdatedList = this.getUpdatedList.bind(this)
-        this.updateField = this.updateField.bind(this)
+        this.clear = this.clear.bind(this)
         this.load = this.load.bind(this)
         this.remove = this.remove.bind(this)
 
     }
-
 
     componentWillMount() {
         axios(baseUrl).then(resp => {
@@ -35,19 +29,28 @@ export default class UserCrud extends Component {
         })
     }
 
-    clear() {
-        this.setState({ user: initialState.user })
+    handleChangeNome(e) {
+        this.setState({...this.state, nome: e.target.value })
+    }
+
+    handleChangeEmail(e) {
+        this.setState({...this.state, email: e.target.value })
     }
 
     save() {
-        const user = this.state.user
-        const method = user._id ? 'put' : 'post'
-        const url = user._id ? `${baseUrl}/${user._id}` : baseUrl
-        axios[method](url, user)
-            .then(resp => {
-                const list = this.getUpdatedList(resp.data)
-                this.setState({ user: initialState.user, list })
-            })
+        const nome = this.state.nome
+        const email = this.state.email
+        axios.post(baseUrl, { nome, email })
+        .then(resp => {
+            const list = this.getUpdatedList(resp.data)
+            this.setState({ list })
+        })
+    }
+
+    
+
+    clear(){
+        this.setState({...this.state= ''})
     }
 
     getUpdatedList(user, add = true) {
@@ -56,11 +59,7 @@ export default class UserCrud extends Component {
         return list
     }
 
-    updateField(event) {
-        const user = { ...this.state.user }
-        user[event.target.nome] = event.target.value
-        this.setState({ user })
-    }
+    
 
     renderForm() {
         return (
@@ -70,8 +69,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label className="font-weight-bold text-uppercase">Nome</label>
                             <input type="text" className="form-control" name="nome" placeholder="Digite o nome..."
-                                value={this.state.user.nome} onChange={e => this.updateField(e)} />
-                            {console.log(this.state.user.nome)}
+                              value={this.state.nome} onChange={this.handleChangeNome}/>
                         </div>
                     </div>
 
@@ -79,7 +77,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label className="font-weight-bold text-uppercase">E-mail</label>
                             <input type="text" className="form-control" name="email" placeholder="Digite o e-mail..."
-                                value={this.state.user.email} onChange={e => this.updateField(e)} />
+                               value={this.state.email} onChange={this.handleChangeEmail} />
                         </div>
                     </div>
                 </div>
