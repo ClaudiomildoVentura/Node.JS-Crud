@@ -31,27 +31,29 @@ export default class UserCrud extends Component {
     }
 
     handleChangeNome(e) {
-        this.setState({...this.state, nome: e.target.value })
+        this.setState({ ...this.state, nome: e.target.value })
     }
 
     handleChangeEmail(e) {
-        this.setState({...this.state, email: e.target.value })
+        this.setState({ ...this.state, email: e.target.value })
     }
 
     save() {
         const nome = this.state.nome
         const email = this.state.email
         axios.post(baseUrl, { nome, email })
-        .then(resp => {
-            const list = this.getUpdatedList(resp.data)
-            this.setState({ list })
-        })
+            .then(resp => {
+                const list = this.getUpdatedList(resp.data)
+                this.state.nome = '',
+                    this.state.email = ''
+                this.setState({ list })
+            })
     }
 
-    clear(){
+    clear() {
         const nome = ''
         const email = ''
-        this.setState({nome, email})
+        this.setState({ nome, email })
     }
 
     getUpdatedList(user, add = true) {
@@ -68,7 +70,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label className="font-weight-bold text-uppercase">Nome</label>
                             <input type="text" className="form-control" name="nome" placeholder="Digite o nome..."
-                              value={this.state.nome} onChange={this.handleChangeNome}/>
+                                value={this.state.nome} onChange={this.handleChangeNome} />
                         </div>
                     </div>
 
@@ -76,7 +78,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label className="font-weight-bold text-uppercase">E-mail</label>
                             <input type="text" className="form-control" name="email" placeholder="Digite o e-mail..."
-                               value={this.state.email} onChange={this.handleChangeEmail} />
+                                value={this.state.email} onChange={this.handleChangeEmail} />
                         </div>
                     </div>
                 </div>
