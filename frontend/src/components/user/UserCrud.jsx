@@ -20,8 +20,8 @@ export default class UserCrud extends Component {
         this.handleChangeEmail = this.handleChangeEmail.bind(this)
         this.save = this.save.bind(this)
         this.clear = this.clear.bind(this)
-        this.load = this.load.bind(this)
         this.remove = this.remove.bind(this)
+        this.keyClick = this.keyClick.bind(this)
     }
 
     componentWillMount() {
@@ -30,15 +30,15 @@ export default class UserCrud extends Component {
         })
     }
 
-    handleChangeNome(e) {
+    handleChangeNome = (e) => {
         this.setState({ ...this.state, nome: e.target.value })
     }
 
-    handleChangeEmail(e) {
+    handleChangeEmail = (e) => {
         this.setState({ ...this.state, email: e.target.value })
     }
 
-    save() {
+    save = () => {
         const nome = this.state.nome
         const email = this.state.email
         axios.post(baseUrl, { nome, email })
@@ -50,17 +50,33 @@ export default class UserCrud extends Component {
             })
     }
 
-    clear() {
+    clear = () => {
         const nome = ''
         const email = ''
         this.setState({ nome, email })
     }
 
-    getUpdatedList(user, add = true) {
+    remove = (user) => {
+        axios.delete(`${baseUrl}/${user._id}`)
+            .then(resp => {
+                const list = this.getUpdatedList(user, false)
+                this.setState({ list })
+            })
+    }
+
+    getUpdatedList = (user, add = true) => {
         const list = this.state.list.filter(u => u._id !== user._id)
         if (add) list.unshift(user)
         return list
     }
+
+     keyClick = (event) => {
+        if (event.key === 'Enter') {
+            this.save()
+        } else if (event.key === 'Escape') {
+            this.clear()
+        }  
+    }  
 
     renderForm() {
         return (
@@ -70,7 +86,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label className="font-weight-bold text-uppercase">Nome</label>
                             <input type="text" className="form-control" name="nome" placeholder="Digite o nome..."
-                                value={this.state.nome} onChange={this.handleChangeNome} />
+                                value={this.state.nome} onChange={this.handleChangeNome} onKeyUp={this.keyClick} />
                         </div>
                     </div>
 
@@ -78,7 +94,7 @@ export default class UserCrud extends Component {
                         <div className="form-group">
                             <label className="font-weight-bold text-uppercase">E-mail</label>
                             <input type="text" className="form-control" name="email" placeholder="Digite o e-mail..."
-                                value={this.state.email} onChange={this.handleChangeEmail} />
+                                value={this.state.email} onChange={this.handleChangeEmail} onKeyUp={this.keyClick} />
                         </div>
                     </div>
                 </div>
@@ -91,18 +107,6 @@ export default class UserCrud extends Component {
                 </div>
             </div>
         )
-    }
-
-    load(user) {
-        this.setState({ user })
-    }
-
-    remove(user) {
-        axios.delete(`${baseUrl}/${user._id}`)
-            .then(resp => {
-                const list = this.getUpdatedList(user, false)
-                this.setState({ list })
-            })
     }
 
     renderTable() {
@@ -127,7 +131,7 @@ export default class UserCrud extends Component {
         return this.state.list.map(user => {
             return (
                 <tr key={user._id}>
-                    <td>{user._id}</td>
+                    <td className="font-weight-bold">{user._id}</td>
                     <td>{user.nome}</td>
                     <td>{user.email}</td>
                     <td>
