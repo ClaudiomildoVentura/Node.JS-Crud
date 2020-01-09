@@ -9,7 +9,9 @@ const headerProps = {
 
 const baseUrl = 'http://127.0.0.1:3001/api/users'
 
+
 export default class UserCrud extends Component {
+
     constructor(props) {
         super(props)
         this.state = { nome: '', email: '', list: [] }
@@ -20,7 +22,6 @@ export default class UserCrud extends Component {
         this.clear = this.clear.bind(this)
         this.load = this.load.bind(this)
         this.remove = this.remove.bind(this)
-
     }
 
     componentWillMount() {
@@ -47,10 +48,10 @@ export default class UserCrud extends Component {
         })
     }
 
-    
-
     clear(){
-        this.setState({...this.state= ''})
+        const nome = ''
+        const email = ''
+        this.setState({nome, email})
     }
 
     getUpdatedList(user, add = true) {
@@ -58,8 +59,6 @@ export default class UserCrud extends Component {
         if (add) list.unshift(user)
         return list
     }
-
-    
 
     renderForm() {
         return (
